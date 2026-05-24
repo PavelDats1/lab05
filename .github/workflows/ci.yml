@@ -1,5 +1,4 @@
-
-name: Coveralls
+name: CI
 
 on:
   push:
@@ -8,41 +7,20 @@ on:
     branches: [ main ]
 
 jobs:
-  coverage:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-      with:
-        submodules: recursive
 
     - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y cmake g++ lcov
+      run: sudo apt update && sudo apt install -y cmake build-essential libgtest-dev
 
-    - name: Configure with coverage
-      run: |
-        cd banking
-        cmake -H. -B_build -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="--coverage"
-        cd ..
+    - name: Configure
+      run: cmake -B build -S .
 
-    - name: Build and run tests
-      run: |
-        cd banking
-        cmake --build _build
-        cd _build
-        ./banking_check
-        cd ../..
+    - name: Build
+      run: cmake --build build
 
-    - name: Collect coverage
-      run: |
-        cd banking
-        lcov --capture --directory . --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' '*/third-party/*' '*/_build/*' --output-file coverage.info
-        cd ..
-
-    - name: Upload to Coveralls
-      uses: coverallsapp/github-action@v2
-      with:
-        file: banking/coverage.info
+    - name: Run tests
+      run: ./build/tests
