@@ -1,32 +1,39 @@
 cmake_minimum_required(VERSION 3.10)
-project(banking)
+project(solver)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Библиотека banking
-add_library(banking STATIC
-    banking/src/Account.cpp
-    banking/src/Transaction.cpp
-)
+# ========== ОСНОВНАЯ ПРОГРАММА ==========
+add_executable(solver solver.cpp)
 
-target_include_directories(banking PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/banking/include
-)
+# ========== CPACK НАСТРОЙКИ ==========
+set(CPACK_GENERATOR "TGZ;DEB;RPM")
+set(CPACK_PACKAGE_NAME "solver")
+set(CPACK_PACKAGE_VERSION "0.1.0.0")
+set(CPACK_PACKAGE_VERSION_MAJOR 0)
+set(CPACK_PACKAGE_VERSION_MINOR 1)
+set(CPACK_PACKAGE_VERSION_PATCH 0)
+set(CPACK_PACKAGE_VERSION_TWEAK 0)
+set(CPACK_PACKAGE_CONTACT "pavel@example.com")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Simple solver application for CPack demo")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/DESCRIPTION")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
-# Подключаем GTest
-enable_testing()
-find_package(GTest REQUIRED)
+# RPM настройки
+set(CPACK_RPM_PACKAGE_NAME "solver")
+set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+set(CPACK_RPM_PACKAGE_GROUP "Applications")
+set(CPACK_RPM_PACKAGE_RELEASE 1)
 
-# Тесты
-add_executable(tests
-    tests/test_account.cpp
-    tests/test_transaction.cpp
-)
+# DEB настройки
+set(CPACK_DEBIAN_PACKAGE_NAME "solver")
+set(CPACK_DEBIAN_PACKAGE_PREDEPENDS "cmake >= 3.0")
+set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
 
-target_link_libraries(tests banking GTest::GTest GTest::Main)
-target_include_directories(tests PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/banking/include
-)
+# Установка программы
+install(TARGETS solver RUNTIME DESTINATION bin)
 
-add_test(NAME BankingTests COMMAND tests)
+# Подключение CPack
+include(CPack)
