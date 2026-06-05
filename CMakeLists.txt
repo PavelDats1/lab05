@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ========== ОСНОВНАЯ ПРОГРАММА ==========
 add_executable(solver solver.cpp)
 
+# ========== ТЕСТЫ ИЗ BANKING ==========
+add_subdirectory(banking)
+
 # ========== CPACK НАСТРОЙКИ ==========
 set(CPACK_GENERATOR "TGZ;DEB;RPM")
 set(CPACK_PACKAGE_NAME "solver")
