@@ -16,7 +16,6 @@ if(BUILD_TESTS)
     file(GLOB BANKING_TEST_SOURCES tests/*.cpp)
     add_executable(banking_check ${BANKING_TEST_SOURCES})
     
-    # Линкуем с gtest_main (она содержит main)
     target_link_libraries(banking_check banking 
         GTest::gtest_main
         GTest::gtest
@@ -27,5 +26,6 @@ if(BUILD_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}
     )
     
-    add_test(NAME banking_check COMMAND banking_check)
+    # ЭТА СТРОКА РЕГИСТРИРУЕТ ТЕСТ
+    add_test(NAME BankingTests COMMAND banking_check)
 endif()
